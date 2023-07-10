@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <style>
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            gap: 2rem;
+            width: fit-content;
+            height: 100vh;
+        }
+        .disp{
+            display: flex;
+            justify-content: end;
+            align-items: end;
+            height: 12rem;
+            background-color: black;
+            grid-column: span 4;
+            color: white;
+            font-size: 2rem;
+        }
+        .grid-container{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-template-rows: 1fr 0.3fr 0.3fr 0.3fr 0.3fr 0.3fr;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            background-color: black;
+            border-style: solid;
+            padding: 1rem;
+            border-radius: 5%;
+        }
+        .btn{
+            border-radius: 50%;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="grid-container">
+            <div class="disp">0</div>
+            <button class="btn btn-secondary" id="ac">AC</button>
+            <button class="btn btn-secondary" id="sign"><sup>+</sup>/<sub>-</sub></button>
+            <button class="btn btn-secondary" id="r">%</button>
+            <button class="btn btn-warning" id="d">/</button>
+            <button class="btn btn-dark">7</button>
+            <button class="btn btn-dark">8</button>
+            <button class="btn btn-dark">9</button>
+            <button class="btn btn-warning" id="m">*</button>
+            <button class="btn btn-dark">4</button>
+            <button class="btn btn-dark">5</button>
+            <button class="btn btn-dark">6</button>
+            <button class="btn btn-warning" id="s">-</button>
+            <button class="btn btn-dark">1</button>
+            <button class="btn btn-dark">2</button>
+            <button class="btn btn-dark">3</button>
+            <button class="btn btn-warning" id="a">+</button>
+            <button class="btn btn-dark" style="grid-column: span 2;border-radius: var(--bs-border-radius);">0</button>
+            <button class="btn btn-dark">.</button>
+            <button class="btn btn-warning" id="ans">=</button>
+
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script>
+
+
+    var disp="";
+    var num1 = 0;
+    var num2 = 0;
+    var num = "";
+
+    function display(disp)
+    {
+        $(".disp").text(disp);
+    }
+
+    function operations() {
+        if(x===0)
+        {
+            num1 = parseFloat(num);
+            x++;
+        }
+        else
+        {
+            num2 = parseFloat(num);
+            num1 = calc(num1,num2,i);
+        }
+        num = "";
+    }
+
+    function answer()
+    {
+        num2 = parseFloat(num);
+        disp = calc(num1,num2,i);
+        display(disp);
+        //reset 
+        x = 0;
+        num = disp;
+        i = "";
+    }
+
+    function reset()
+    {
+        $(".disp").text("0");
+        disp = "";
+        num1 = 0;
+        num2 = 0;
+        num = "";
+        x = 0;
+    }
+
+    $(".btn-dark").click(function() {
+        num += $(this).text();
+        disp += $(this).text();
+        display(disp);
+    });
+
+    var x = 0;
+    var i;
+    $("#a, #s, #m, #d, #r").click(function (){
+        operations();
+        i = $(this).text();
+        disp += $(this).text();
+        display(disp);
+    });
+
+    var ans;
+    function calc(num1,num2,i)
+    {
+        switch (i) {
+            case "+":
+                ans = num1 + num2;
+                break;
+            case "-":
+                ans = num1 - num2;
+                break;
+            case "*":
+                ans = num1 * num2;
+                break;
+            case "/":
+                ans = num1 / num2;
+                break;
+            case "%":
+                ans = num1 % num2;
+                break;    
+            default:
+                break;
+        }
+        console.log(ans);
+        return ans;
+    }
+
+    $("#ans").click(function (){
+        answer();
+    });
+
+    $("#ac").click(function() {
+        reset();     
+    });
+
+    var l = ['1','2','3','4','5','6','7','8','9','0'];
+    var o = ['+','-','/','*'];
+    var a;
+
+    $("body").keydown(function() {
+        a = event.key;
+        if(l.includes(a))
+        {
+            num += a;
+            disp += a;
+            display(disp);
+        }
+        else if(o.includes(a))
+        {
+            operations();
+            i = a;
+            disp += a;
+            display(disp);
+        }
+        else if(a == 'Enter' || a == '=')
+        {
+            answer();
+        }
+        else if(a == 'Backspace')
+        {
+            reset();
+        }
+    });
+
+    $("#sign").click(function() {
+        num = "-" + num;
+        disp = "-" + disp;
+        display(disp);
+    });
+
+</script>    
+</body>
+</html>
